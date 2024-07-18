@@ -38,13 +38,13 @@ class ViewController: UIViewController {
     
     loadData()
   }
-  
+  //추가 버튼을 눌렀을 때 실행되는 메서드
   @objc func addFriend() {
     let addFriendVC = PhoneBookViewController()
     addFriendVC.delegate = self
     navigationController?.pushViewController(addFriendVC, animated: true)
   }
-  
+  //CoreData에서 데이터를 로드하고 테이블 뷰에 갱신하는 메서드
   private func loadData() {
     do {
       let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
@@ -58,23 +58,25 @@ class ViewController: UIViewController {
 }
 
 extension ViewController: UITableViewDataSource, UITableViewDelegate {
+  //테이블 뷰에 있는 행의 갯수
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return data.count
   }
-  
+  //테이블 뷰의 각 행의 높이
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 80
+  }
+  //각 행의 대한 셀을 구성
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: TableViewCell.id, for: indexPath) as! TableViewCell
     let (name, number, imageUrl) = data[indexPath.row]
     cell.configureCell(with: name, number: number, imageUrl: imageUrl)
     return cell
   }
-  
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 80
-  }
 }
 
 extension ViewController: PhoneBookDelegate {
+  //연락처가 추가되었을 때 호출되는 메서드
   func didAddFriend(name: String, phoneNumber: String, imageUrl: String) {
     // CoreData에 새 데이터 저장
     guard let entity = NSEntityDescription.entity(forEntityName: "Pokemon", in: self.container.viewContext) else {
@@ -86,6 +88,7 @@ extension ViewController: PhoneBookDelegate {
     newPhoneBook.setValue(imageUrl, forKey: "imageUrl")
     
     do {
+      //데이터 저장, 배열에 새 데이터를 추가하고 테이블 뷰 갱신
       try self.container.viewContext.save()
       data.append((name, phoneNumber, imageUrl))
       tableView.reloadData()

@@ -94,13 +94,11 @@ class PhoneBookViewController: UIViewController {
   @objc private func editImageButtonTapped() {
     makeRandomImage()
   }
-  
+  //친구 정보를 저장하고 delegate 메서드를 호출하는 메서드
   @objc private func save() {
     guard let name = textName.text, !name.isEmpty,
           let phoneNumber = textNumber.text, !phoneNumber.isEmpty else {
-      let alert = UIAlertController(title: "오류", message: "모든 필드를 입력하세요.", preferredStyle: .alert)
-      alert.addAction(UIAlertAction(title: "확인", style: .default, handler: nil))
-      present(alert, animated: true, completion: nil)
+      print("필요한 데이터를 입력하세요")
       return
     }
     
@@ -108,6 +106,7 @@ class PhoneBookViewController: UIViewController {
     navigationController?.popViewController(animated: true)
   }
   
+  // 랜덤 이미지 URL을 생성하고 UIImageView에 설정하는 메서드
   private func makeRandomImage() {
     imageUrl = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/\(Int.random(in: 0...151)).png"
     viewImage.kf.setImage(with: URL(string: imageUrl))
