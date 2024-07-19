@@ -50,6 +50,8 @@ class ViewController: UIViewController {
       let fetchRequest: NSFetchRequest<Pokemon> = Pokemon.fetchRequest()
       let results = try self.container.viewContext.fetch(fetchRequest)
       data = results.map { ($0.name ?? "", $0.phoneNumber ?? "", $0.imageUrl ?? "") }
+      data.sort {$0.name < $1.name}
+      
       tableView.reloadData()
     } catch {
       print("데이터 읽기 실패")
@@ -91,6 +93,7 @@ extension ViewController: PhoneBookDelegate {
       //데이터 저장, 배열에 새 데이터를 추가하고 테이블 뷰 갱신
       try self.container.viewContext.save()
       data.append((name, phoneNumber, imageUrl))
+      data.sort {$0.name < $1.name}
       tableView.reloadData()
     } catch {
       print("저장 실패")
